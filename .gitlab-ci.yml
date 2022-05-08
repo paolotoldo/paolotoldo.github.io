@@ -33,7 +33,7 @@ deploy_homelab:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - ssh "$HOMELAB_USERNAME"@"$HOMELAB_IP" 'rm -f -R /home/toldop/web-server/paolotoldo/*'
-    - ssh $HOMELAB_USERNAME@$HOMELAB_IP 'mkdir -p $HOMELAB_PATH/paolotoldo'
+    - ssh $HOMELAB_USERNAME@$HOMELAB_IP 'mkdir -p ""$HOMELAB_PATH""/paolotoldo'
     - scp -r ./public_html/* $HOMELAB_USERNAME@$HOMELAB_IP:$HOMELAB_PATH/paolotoldo
   only:
      - master
