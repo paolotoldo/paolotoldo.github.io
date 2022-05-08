@@ -1,8 +1,8 @@
 ---
 stages:
   - build
-  - deploy_homelab
-  - deploy_idra
+  - deploy
+  - deploy
   
 build:
   stage: build
@@ -18,7 +18,7 @@ build:
       - public_html
   
 deploy_homelab:
-  stage: deploy_homelab
+  stage: deploy
   image: docker:stable
   allow_failure: true
   when: manual
@@ -39,7 +39,7 @@ deploy_homelab:
      - master
 
 deploy_idra:
-  stage: deploy_idra
+  stage: deploy
   image: docker:stable
   allow_failure: true
   when: manual
