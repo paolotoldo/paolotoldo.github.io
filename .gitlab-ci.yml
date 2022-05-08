@@ -53,8 +53,8 @@ deploy_idra:
     - echo "$SSH_PRIVATE_KEY" | ssh-add -
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - ssh pi@192.168.7 'rm -f -R /home/pi/Applications/web-server/*'
-    - ssh pi@192.168.7 'mkdir -p /home/pi/Applications/web-server'
-    - scp -r ./public_html/* pi@192.168.7:/home/pi/Applications/web-server
+    - ssh pi@192.168.7 'rm -f -R /home/pi/Applications/web-server/paolotoldo/*'
+    - ssh pi@192.168.7 'mkdir -p /home/pi/Applications/web-server/paolotoldo'
+    - scp -r ./public_html/* pi@192.168.7:/home/pi/Applications/web-server/paolotoldo
   only:
      - master
