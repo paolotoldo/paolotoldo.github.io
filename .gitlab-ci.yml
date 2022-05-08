@@ -1,7 +1,8 @@
 ---
 stages:
   - build
-  - deploy
+  - deploy_homelab
+  - deploy_idra
   
 build:
   stage: build
@@ -16,8 +17,8 @@ build:
     paths:
       - public_html
   
-deploy:
-  stage: deploy
+deploy_homelab:
+  stage: deploy_homelab
   image: docker:stable
   allow_failure: true
   when: manual
@@ -34,5 +35,26 @@ deploy:
     - ssh toldop@192.168.166 'rm -f -R /home/toldop/web-server/paolotoldo/*'
     - ssh toldop@192.168.166 'mkdir -p /home/toldop/web-server/paolotoldo'
     - scp -r ./public_html/* toldop@192.168.166:/home/toldop/web-server/paolotoldo
+  only:
+     - master
+
+deploy_idra:
+  stage: deploy_idra
+  image: docker:stable
+  allow_failure: true
+  when: manual
+  dependencies: 
+    - build
+  script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    # Run ssh-agent (inside the build environment)
+    - eval $(ssh-agent -s)
+    # Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+    - echo "$SSH_PRIVATE_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - ssh toldop@192.168.7 'rm -f -R /home/pi/Applications/web-server/*'
+    - ssh toldop@192.168.7 'mkdir -p /home/pi/Applications/web-server'
+    - scp -r ./public_html/* toldop@192.168.7:/home/pi/Applications/web-server
   only:
      - master
