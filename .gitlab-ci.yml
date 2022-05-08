@@ -32,6 +32,7 @@ deploy:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - ssh toldop@192.168.166 'rm -f -R /home/toldop/web-server/paolotoldo.io/*'
+    - ssh toldop@192.168.166 'mkdir -p /home/toldop/web-server/paolotoldo.io'
     - scp -r ./public_html/* toldop@192.168.166:/home/toldop/web-server/paolotoldo.io
   only:
      - master
