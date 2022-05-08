@@ -32,9 +32,9 @@ deploy_homelab:
     - echo "$SSH_PRIVATE_KEY" | ssh-add -
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - ssh $HOMELAB_USERNAME@$HOMELAB_IP 'rm -f -R /home/toldop/web-server/paolotoldo/*'
-    - ssh $HOMELAB_USERNAME@$HOMELAB_IP 'mkdir -p /home/toldop/web-server/paolotoldo'
-    - scp -r ./public_html/* $HOMELAB_USERNAME@$HOMELAB_IP:/home/toldop/web-server/paolotoldo
+    - ssh $HOMELAB_USERNAME@$HOMELAB_IP 'rm -f -R $HOMELAB_PATH/*'
+    - ssh $HOMELAB_USERNAME@$HOMELAB_IP 'mkdir -p $HOMELAB_PATH'
+    - scp -r ./public_html/* $HOMELAB_USERNAME@$HOMELAB_IP:$HOMELAB_PATH
   only:
      - master
 
@@ -53,8 +53,8 @@ deploy_idra:
     - echo "$SSH_PRIVATE_KEY" | ssh-add -
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - ssh pi@192.168.7 'rm -f -R /home/pi/Applications/web-server/paolotoldo/*'
-    - ssh pi@192.168.7 'mkdir -p /home/pi/Applications/web-server/paolotoldo'
-    - scp -r ./public_html/* pi@192.168.7:/home/pi/Applications/web-server/paolotoldo
+    - ssh $IDRA_USERNAME@$IDRA_IP 'rm -f -R $IDRA_PATH/*'
+    - ssh $IDRA_USERNAME@$IDRA_IP 'mkdir -p $IDRA_PATH'
+    - scp -r ./public_html/* $IDRA_USERNAME@$IDRA_IP:$IDRA_PATH
   only:
      - master
