@@ -1,0 +1,37 @@
+---
+stages:
+  - build
+  - deploy
+  
+build:
+  stage: build
+  image: docker:stable
+  script:
+    - apk add --update git
+    - apk add rsync
+    - git submodule update --init --recursive
+    - mkdir public_html
+    - rsync -av --progress --exclude 'public_html' ./* ./public_html
+  artifacts:
+    paths:
+      - public_html
+  
+deploy:
+  stage: deploy
+  image: docker:stable
+  allow_failure: true
+  when: manual
+  dependencies: 
+    - build
+  script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    # Run ssh-agent (inside the build environment)
+    - eval $(ssh-agent -s)
+    # Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+    - echo "$SSH_PRIVATE_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - ssh toldop@192.168.166 'rm -f -R /home/toldop/web-server/paolotoldo.io/*'
+    - scp -r ./public_html/* toldop@192.168.166:/home/toldop/web-server/paolotoldo.io
+  only:
+     - master
