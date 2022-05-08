@@ -38,23 +38,23 @@ deploy_homelab:
   only:
      - master
 
-deploy_idra:
-  stage: deploy
-  image: docker:stable
-  allow_failure: true
-  when: manual
-  dependencies: 
-    - build
-  script:
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-    # Run ssh-agent (inside the build environment)
-    - eval $(ssh-agent -s)
-    # Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
-    - echo "$SSH_PRIVATE_KEY" | ssh-add -
-    - mkdir -p ~/.ssh
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - ssh $IDRA_USERNAME@$IDRA_IP 'rm -f -R $IDRA_PATH/*'
-    - ssh $IDRA_USERNAME@$IDRA_IP 'mkdir -p $IDRA_PATH'
-    - scp -r ./public_html/* $IDRA_USERNAME@$IDRA_IP:$IDRA_PATH
-  only:
-     - master
+# deploy_idra:
+#   stage: deploy
+#   image: docker:stable
+#   allow_failure: true
+#   when: manual
+#   dependencies: 
+#     - build
+#   script:
+#     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+#     # Run ssh-agent (inside the build environment)
+#     - eval $(ssh-agent -s)
+#     # Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+#     - echo "$SSH_PRIVATE_KEY" | ssh-add -
+#     - mkdir -p ~/.ssh
+#     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+#     - ssh $IDRA_USERNAME@$IDRA_IP 'rm -f -R $IDRA_PATH/*'
+#     - ssh $IDRA_USERNAME@$IDRA_IP 'mkdir -p $IDRA_PATH'
+#     - scp -r ./public_html/* $IDRA_USERNAME@$IDRA_IP:$IDRA_PATH
+#   only:
+#      - master
